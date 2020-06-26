@@ -38,7 +38,7 @@ if TYPE_CHECKING:
     from bastd.actor.spazfactory import SpazFactory
 
 POWERUP_WEAR_OFF_TIME = 20000
-BASE_PUNCH_COOLDOWN = 400
+BASE_PUNCH_COOLDOWN = 4
 
 
 class PickupMessage:
@@ -109,12 +109,12 @@ class Spaz(ba.Actor):
         self.play_big_death_sound = False
 
         # scales how much impacts affect us (most damage calcs)
-        self.impact_scale = 1.0
+        self.impact_scale = 10
 
         self.source_player = source_player
         self._dead = False
         if self._demo_mode:  # preserve old behavior
-            self._punch_power_scale = 1.2
+            self._punch_power_scale = 5.2
         else:
             self._punch_power_scale = factory.punch_power_scale
         self.fly = ba.getactivity().globalsnode.happy_thoughts_mode
@@ -186,7 +186,7 @@ class Spaz(ba.Actor):
                 if node:
                     setattr(node, attr, val)
 
-            ba.timer(1.0, ba.Call(_safesetattr, self.node, 'invincible',
+            ba.timer(1000.0, ba.Call(_safesetattr, self.node, 'invincible',
                                   False))
         self.hitpoints = 1000
         self.hitpoints_max = 1000
@@ -623,8 +623,8 @@ class Spaz(ba.Actor):
         assert self.node
         self.node.boxing_gloves = True
         if self._demo_mode:  # Preserve old behavior.
-            self._punch_power_scale = 1.7
-            self._punch_cooldown = 300
+            self._punch_power_scale = 10.7
+            self._punch_cooldown = 3
         else:
             factory = SpazFactory.get()
             self._punch_power_scale = factory.punch_power_scale_gloves
@@ -886,7 +886,7 @@ class Spaz(ba.Actor):
 
             mag = msg.magnitude * self.impact_scale
             velocity_mag = msg.velocity_magnitude * self.impact_scale
-            damage_scale = 0.22
+            damage_scale = 20
 
             # If they've got a shield, deliver it to that instead.
             if self.shield:
